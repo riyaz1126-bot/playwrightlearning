@@ -1,33 +1,45 @@
-import { defineConfig, devices } from '@playwright/test';
+import { defineConfig, devices } from "@playwright/test";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export default defineConfig({
-  testDir: './tests',
+  testDir: "./tests",
 
-  // Run tests sequentially (recommended while learning)
-  fullyParallel: false,
+  timeout: 100 * 1000,
 
-  // No retries
-  retries: 0,
+  expect: {
+    timeout: 100 * 1000,
+  },
 
-  // Run one test worker at a time
-  workers: 1,
-
-  // HTML report
-  reporter: 'html',
+  reporter: "html",
 
   use: {
-    // Uncomment if all tests use the same website
-    // baseURL: 'https://blazedemo.com',
-
-    // Keep trace only if a test fails
-    trace: 'retain-on-failure',
+    baseURL: process.env.BASE_URL,
+    headless: false,
+    screenshot: "only-on-failure",
+    trace: "on-first-retry",
   },
 
   projects: [
     {
-      name: 'chromium',
+      name: "chromium",
       use: {
-        ...devices['Desktop Chrome'],
+        ...devices["Desktop Chrome"],
+      },
+    },
+
+    {
+      name: "firefox",
+      use: {
+        ...devices["Desktop Firefox"],
+      },
+    },
+
+    {
+      name: "webkit",
+      use: {
+        ...devices["Desktop Safari"],
       },
     },
   ],
